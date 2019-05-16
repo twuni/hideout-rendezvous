@@ -1,0 +1,18 @@
+version: 2.1
+
+orbs:
+  nodejs: twuni/nodejs@12.2.0
+
+workflows:
+  default:
+    jobs:
+    - nodejs/initialize
+    - nodejs/install:
+        requires:
+        - nodejs/initialize
+    - nodejs/style:
+        requires:
+        - nodejs/install
+    - nodejs/build:
+        requires:
+        - nodejs/install

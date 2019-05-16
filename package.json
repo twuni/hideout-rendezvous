@@ -1,0 +1,26 @@
+{
+  "name": "@hideout/rendezvous",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": {
+    "email": "devin@canterberry.cc",
+    "name": "Devin Canterberry"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -vfR lib && babel --only '**/index.js' --no-comments --compact true --minified --source-maps false --out-dir lib src; cp -vfR package.json yarn.lock README.md LICENSE.md lib/",
+    "lint": "eslint src",
+    "start": "node lib"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.4.4",
+    "@babel/core": "7.4.4",
+    "@babel/preset-env": "7.4.4",
+    "babel-eslint": "10.0.1",
+    "eslint": "5.16.0",
+    "eslint-plugin-ante": "1.0.2"
+  },
+  "dependencies": {
+    "ws": "7.0.0"
+  }
+}
