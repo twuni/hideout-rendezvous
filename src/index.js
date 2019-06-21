@@ -94,14 +94,17 @@ const onConnect = (webSocket) => {
   return engine;
 };
 
-const onDisconnect = (webSocket) => {
+const removeWebSocketFromState = (webSocket) => {
   let index = state.webSockets.findIndex((it) => it.webSocket === webSocket);
 
   while (index >= 0) {
     state.webSockets.splice(index, 1);
     index = state.webSockets.findIndex((it) => it.webSocket === webSocket);
   }
+};
 
+const onDisconnect = (webSocket) => {
+  removeWebSocketFromState(webSocket);
   logger.info({ context: { connected: state.webSockets.length }, type: 'disconnect' });
 };
 
