@@ -14,13 +14,13 @@
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.4",
-    "@babel/preset-env": "7.4.4",
-    "babel-eslint": "10.0.1",
+    "@babel/core": "7.4.5",
+    "@babel/preset-env": "7.4.5",
+    "babel-eslint": "10.0.2",
     "eslint": "5.16.0",
     "eslint-plugin-ante": "1.0.2"
   },
   "dependencies": {
-    "ws": "7.0.0"
+    "ws": "7.0.1"
   }
 }
