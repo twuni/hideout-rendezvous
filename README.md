@@ -1,5 +1,7 @@
 # Hideout Rendezvous Node
 
+[![CircleCI][1]][2]
+
 This repo implements a rendezvous node in the Hideout network.
 
 A rendezvous node's primary responsibility is to relay packets
@@ -31,3 +33,6 @@ A production node requires some environment variables to specify
 important configuration such as the TLS certificate and key, the IP
 address and TCP port on which to listen, and the URL to a peer
 rendezvous node on the network the node would like to join.
+
+[1]: https://circleci.com/gh/hideoutchat/rendezvous.svg?style=svg
+[2]: https://circleci.com/gh/hideoutchat/rendezvous
