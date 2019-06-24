@@ -110,7 +110,7 @@ const onDisconnect = (webSocket) => {
 
 if (configuration.peer.url) {
   const webSocket = new WebSocket(configuration.peer.url, {
-    ca: [configuration.peer.certificateAuthority].filter(Boolean),
+    ca: [configuration.tls.server.certificateAuthority].filter(Boolean),
     servername: configuration.peer.domain
   });
 
