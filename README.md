@@ -25,7 +25,7 @@ Hideout protocol stack.
 This is a Node.js application (not a library).
 The easiest way to get up and running is via the public Docker image.
 Run `docker run hideoutchat/rendezvous` to spin up a local instance for
-testing. **Do not run this in production!**
+testing. **Do not run this Docker image in production!**
 
 A production node requires some environment variables to specify
 important configuration such as the TLS certificate and key, the IP

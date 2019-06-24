@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  nodejs: twuni/nodejs@12.2.0
+  nodejs: twuni/nodejs@12.4.0
 
 workflows:
   default:
