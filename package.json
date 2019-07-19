@@ -13,14 +13,14 @@
     "start": "node lib"
   },
   "devDependencies": {
-    "@babel/cli": "7.4.4",
-    "@babel/core": "7.4.5",
-    "@babel/preset-env": "7.4.5",
+    "@babel/cli": "7.5.5",
+    "@babel/core": "7.5.5",
+    "@babel/preset-env": "7.5.5",
     "babel-eslint": "10.0.2",
-    "eslint": "6.0.0",
+    "eslint": "6.0.1",
     "eslint-plugin-ante": "1.0.2"
   },
   "dependencies": {
-    "ws": "7.0.1"
+    "ws": "7.1.1"
   }
 }
