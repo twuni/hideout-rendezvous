@@ -18,7 +18,7 @@
     "@babel/preset-env": "7.5.5",
     "babel-eslint": "10.0.2",
     "eslint": "6.1.0",
-    "eslint-plugin-ante": "1.0.2"
+    "eslint-plugin-ante": "1.0.3"
   },
   "dependencies": {
     "ws": "7.1.1"

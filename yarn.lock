@@ -1124,10 +1124,10 @@ escape-string-regexp@^1.0.5:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
 
-eslint-plugin-ante@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-ante/-/eslint-plugin-ante-1.0.2.tgz#5788eaed138db5935921db971bba2de69c6349c9"
-  integrity sha512-JsDsB+cUrBvWllnJGwIQ+7J9zANFAK3iFX4oAPFU3wv2thsNxvopV5aZZPawRY3LFBsd40jsDbyyPOqeh9YBbQ==
+eslint-plugin-ante@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-ante/-/eslint-plugin-ante-1.0.3.tgz#0adbd9eff6548d26317304979a0103c66ebf9c41"
+  integrity sha512-9EI6D7F9l4FIIqym+ioCq2O/oOVMT7/Lulg45Z4Q4zN31PPd+E4nXfiPYvnRezDcAG8Rfm62L/jnSywMygHx8A==
 
 eslint-scope@3.7.1:
   version "3.7.1"
