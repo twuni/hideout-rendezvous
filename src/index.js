@@ -158,6 +158,7 @@ const connectToPeer = () => {
         }
       });
     });
+    state.pendingOutboundConnection.catch((error) => logger.warn({ error, type: 'outbound' }));
   }
 };
 
