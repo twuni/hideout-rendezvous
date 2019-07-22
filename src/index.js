@@ -12,6 +12,8 @@ const configuration = configure(process.env);
 const logger = new Logger();
 
 const state = {
+  heartbeats: [],
+  pendingOutboundConnection: undefined,
   webSockets: []
 };
 
@@ -19,7 +21,9 @@ const heartbeat = new Heartbeat({
   ...configuration.heartbeat,
   listWebSockets: () => state.webSockets.map((it) => it.webSocket),
   onTick() {
-    logger.info({ type: 'heartbeat' });
+    for (const beat of state.heartbeats) {
+      beat();
+    }
   },
   onTimeout() {
     logger.info({ type: 'timeout' });
@@ -108,16 +112,6 @@ const onDisconnect = (webSocket) => {
   logger.info({ context: { connected: state.webSockets.length }, type: 'disconnect' });
 };
 
-if (configuration.peer.url) {
-  const webSocket = new WebSocket(configuration.peer.url, {
-    ca: [configuration.tls.server.certificateAuthority].filter(Boolean),
-    servername: configuration.peer.domain
-  });
-
-  webSocket.on('open', () => onConnect(webSocket));
-  webSocket.on('close', () => onDisconnect(webSocket));
-}
-
 const onStart = () => {
   logger.info({ context: { ip: configuration.ip, tcp: configuration.tcp }, type: 'start' });
   heartbeat.start();
@@ -136,6 +130,42 @@ const onStop = () => {
 
   process.exit(0);
 };
+
+const connectToPeer = () => {
+  if (!state.pendingOutboundConnection) {
+    state.pendingOutboundConnection = new Promise((resolve, reject) => {
+      const webSocket = new WebSocket(configuration.peer.url, {
+        ca: [configuration.tls.server.certificateAuthority].filter(Boolean),
+        servername: configuration.peer.domain
+      });
+
+      webSocket.addEventListener('error', (event) => {
+        delete state.pendingOutboundConnection;
+        reject(event.error || event.data);
+        onDisconnect(webSocket);
+      });
+
+      webSocket.addEventListener('open', () => {
+        delete state.pendingOutboundConnection;
+        resolve(webSocket);
+        onConnect(webSocket);
+      });
+
+      webSocket.addEventListener('close', () => {
+        if (state.pendingOutboundConnection) {
+          delete state.pendingOutboundConnection;
+          onDisconnect(webSocket);
+        }
+      });
+    });
+  }
+};
+
+state.heartbeats.push(() => logger.info({ type: 'heartbeat' }));
+
+if (configuration.peer.url) {
+  state.heartbeats.push(() => connectToPeer());
+}
 
 const server = new WebSocketServer({
   ...configuration,
