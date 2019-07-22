@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rm -vfR lib && babel --only '**/index.js' --no-comments --compact true --minified --source-maps false --out-dir lib src; cp -vfR package.json yarn.lock README.md LICENSE.md lib/",
+    "build": "rm -vfR lib && babel --only '**/index.js' --no-comments --compact true --minified --source-maps false --out-dir lib src; cp -vfR package.json package-lock.json yarn.lock README.md LICENSE.md lib/",
     "lint": "eslint src",
     "start": "node lib"
   },
