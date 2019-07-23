@@ -141,12 +141,11 @@ const connectToPeer = () => {
 
       webSocket.addEventListener('error', (event) => {
         delete state.pendingOutboundConnection;
-        reject(event.error || event.data);
+        reject(event);
         onDisconnect(webSocket);
       });
 
       webSocket.addEventListener('open', () => {
-        delete state.pendingOutboundConnection;
         resolve(webSocket);
         onConnect(webSocket);
       });
