@@ -184,7 +184,7 @@ const connectToPeer = () => {
   }
 };
 
-state.heartbeats.push(() => logger.info({ type: 'heartbeat' }));
+state.heartbeats.push(() => logger.info({ context: { connected: state.webSockets.length }, type: 'heartbeat' }));
 
 if (configuration.peer.url) {
   state.heartbeats.push(() => connectToPeer());
