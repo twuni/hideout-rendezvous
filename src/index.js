@@ -1,6 +1,10 @@
+import 'regenerator-runtime/runtime';
+
+import DNS from 'dns';
 import Heartbeat from './heartbeat';
 import Logger from './logger';
 import ShapeMatcher from './shape-matcher';
+import URL from 'url';
 import WebSocket from 'ws';
 import WebSocketEventEngine from './web-socket-event-engine';
 import WebSocketServer from './web-socket-server';
@@ -30,8 +34,9 @@ const heartbeat = new Heartbeat({
   }
 });
 
-const onConnect = (webSocket) => {
+const onConnect = ({ endpoint, webSocket }) => {
   const webSocketState = {
+    endpoint,
     shapeKeys: [],
     subscriptions: {},
     webSocket
@@ -43,18 +48,18 @@ const onConnect = (webSocket) => {
 
   const engine = new WebSocketEventEngine({
     onError(error, message) {
-      logger.error({ message, type: 'message' }, error);
+      logger.error({ context: { message }, type: 'message' }, error);
     },
 
     // eslint-disable-next-line complexity
     onPublish(event) {
-      logger.info({ event, type: 'publish' });
+      logger.info({ context: { event }, type: 'publish' });
       // Forward this message to peers that have subscribed to a matching shape.
 
       const messageToForward = JSON.stringify({ publish: event });
 
-      for (const { shapeKeys, subscriptions, webSocket: peerWebSocket } of state.webSockets) {
-        if (peerWebSocket !== webSocket) {
+      for (const { endpoint: peerEndpoint, shapeKeys, subscriptions, webSocket: peerWebSocket } of state.webSockets) {
+        if (peerWebSocket !== webSocket && peerEndpoint.address !== webSocketState.endpoint.address) {
           for (const shapeKey of shapeKeys) {
             const { [shapeKey]: shapeMatcher } = subscriptions;
 
@@ -67,7 +72,7 @@ const onConnect = (webSocket) => {
     },
 
     onSubscribe(shape) {
-      logger.info({ shape, type: 'subscribe' });
+      logger.info({ context: { shape }, type: 'subscribe' });
       // Subscribe to this shape, so when matching events are published by a peer, they will be forwarded to this web socket.
 
       const shapeKey = JSON.stringify(shape);
@@ -79,7 +84,7 @@ const onConnect = (webSocket) => {
     },
 
     onUnsubscribe(shape) {
-      logger.info({ shape, type: 'unsubscribe' });
+      logger.info({ context: { shape }, type: 'unsubscribe' });
       // Stop subscribing to this shape, if already subscribed to an identical shape.
 
       const shapeKey = JSON.stringify(shape);
@@ -131,6 +136,22 @@ const onStop = () => {
   process.exit(0);
 };
 
+const resolveURLEndpoint = (urlString) => new Promise((resolve, reject) => {
+  const url = new URL(urlString);
+
+  DNS.resolve(url.hostname, 'A', (error, [address]) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve({
+        address,
+        family: 'IPv4',
+        port: Number(url.port || '443')
+      });
+    }
+  });
+});
+
 const connectToPeer = () => {
   if (!state.pendingOutboundConnection) {
     state.pendingOutboundConnection = new Promise((resolve, reject) => {
@@ -142,12 +163,14 @@ const connectToPeer = () => {
       webSocket.addEventListener('error', (event) => {
         delete state.pendingOutboundConnection;
         reject(event);
-        onDisconnect(webSocket);
       });
 
-      webSocket.addEventListener('open', () => {
+      webSocket.addEventListener('open', async () => {
         resolve(webSocket);
-        onConnect(webSocket);
+        onConnect({
+          endpoint: await resolveURLEndpoint(configuration.peer.url),
+          webSocket
+        });
       });
 
       webSocket.addEventListener('close', () => {
@@ -157,7 +180,7 @@ const connectToPeer = () => {
         }
       });
     });
-    state.pendingOutboundConnection.catch((error) => logger.warn({ error, type: 'outbound' }));
+    state.pendingOutboundConnection.catch((error) => logger.warn({ type: 'outbound' }, error));
   }
 };
 

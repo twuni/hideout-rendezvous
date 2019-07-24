@@ -21,6 +21,7 @@
     "eslint-plugin-ante": "1.0.3"
   },
   "dependencies": {
+    "regenerator-runtime": "0.13.3",
     "ws": "7.1.1"
   }
 }

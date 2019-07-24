@@ -19,8 +19,8 @@ class WebSocketServer {
 
     const webSocketServer = new WebSocket.Server({ clientTracking: false, noServer: true });
 
-    webSocketServer.on('connection', (webSocket) => {
-      onConnect(webSocket);
+    webSocketServer.on('connection', ({ endpoint, webSocket }) => {
+      onConnect({ endpoint, webSocket });
 
       webSocket.on('close', () => {
         onDisconnect(webSocket);
@@ -47,7 +47,14 @@ class WebSocketServer {
 
     server.on('upgrade', (request, socket, head) => {
       webSocketServer.handleUpgrade(request, socket, head, (webSocket) => {
-        webSocketServer.emit('connection', webSocket);
+        webSocketServer.emit('connection', {
+          endpoint: {
+            address: socket.remoteAddress,
+            family: socket.remoteFamily,
+            port: socket.remotePort
+          },
+          webSocket
+        });
       });
     });
 
