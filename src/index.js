@@ -4,7 +4,7 @@ import DNS from 'dns';
 import Heartbeat from './heartbeat';
 import Logger from './logger';
 import ShapeMatcher from './shape-matcher';
-import URL from 'url';
+import { URL } from 'url';
 import WebSocket from 'ws';
 import WebSocketEventEngine from './web-socket-event-engine';
 import WebSocketServer from './web-socket-server';
@@ -146,7 +146,7 @@ const resolveURLEndpoint = (urlString) => new Promise((resolve, reject) => {
       resolve({
         address,
         family: 'IPv4',
-        port: Number(url.port || '443')
+        port: Number(url.port || configuration.tcp.port)
       });
     }
   });
