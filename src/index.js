@@ -56,7 +56,7 @@ const onConnect = ({ endpoint, webSocket }) => {
       logger.info({ context: { event }, type: 'publish' });
       // Forward this message to peers that have subscribed to a matching shape.
 
-      const messageToForward = JSON.stringify({ publish: event });
+      const messageToForward = JSON.stringify({ publish: event, type: 'publish' });
 
       for (const { endpoint: peerEndpoint, shapeKeys, subscriptions, webSocket: peerWebSocket } of state.webSockets) {
         if (peerWebSocket !== webSocket && peerEndpoint.address !== webSocketState.endpoint.address) {

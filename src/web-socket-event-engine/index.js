@@ -30,9 +30,9 @@ class WebSocketEventEngine {
       }
     });
 
-    this.publish = (event) => webSocket.send(JSON.stringify({ publish: event }));
-    this.subscribe = (shape) => webSocket.send(JSON.stringify({ subscribe: shape }));
-    this.unsubscribe = (shape) => webSocket.send(JSON.stringify({ unsubscribe: shape }));
+    this.publish = (event) => webSocket.send(JSON.stringify({ publish: event, type: 'publish' }));
+    this.subscribe = (shape) => webSocket.send(JSON.stringify({ subscribe: shape, type: 'subscribe' }));
+    this.unsubscribe = (shape) => webSocket.send(JSON.stringify({ type: 'unsubscribe', unsubscribe: shape }));
   }
 }
 
