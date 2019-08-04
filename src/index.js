@@ -3,6 +3,7 @@ import 'regenerator-runtime/runtime';
 import DNS from 'dns';
 import Heartbeat from './heartbeat';
 import Logger from './logger';
+import { SHA3 } from 'sha3';
 import ShapeMatcher from './shape-matcher';
 import { URL } from 'url';
 import WebSocket from 'ws';
@@ -15,7 +16,11 @@ const configuration = configure(process.env);
 
 const logger = new Logger();
 
+// eslint-disable-next-line no-magic-numbers
+const identifyMessage = (message) => new SHA3(256).update(message).digest('base64');
+
 const state = {
+  hasForwardedMessage: {},
   heartbeats: [],
   pendingOutboundConnection: undefined,
   webSockets: []
@@ -51,15 +56,21 @@ const onConnect = ({ endpoint, webSocket }) => {
       logger.error({ context: { message }, type: 'message' }, error);
     },
 
-    // eslint-disable-next-line complexity
+    // eslint-disable-next-line complexity, max-statements
     onPublish(event) {
-      logger.info({ context: { event }, type: 'publish' });
-      // Forward this message to peers that have subscribed to a matching shape.
-
       const messageToForward = JSON.stringify({ publish: event, type: 'publish' });
+      const messageId = identifyMessage(messageToForward);
 
-      for (const { endpoint: peerEndpoint, shapeKeys, subscriptions, webSocket: peerWebSocket } of state.webSockets) {
-        if (peerWebSocket !== webSocket && peerEndpoint.address !== webSocketState.endpoint.address) {
+      if (state.hasForwardedMessage[messageId]) {
+        return;
+      }
+
+      state.hasForwardedMessage[messageId] = true;
+      logger.info({ context: { event }, type: 'publish' });
+
+      // Forward this message to peers that have subscribed to a matching shape.
+      for (const { shapeKeys, subscriptions, webSocket: peerWebSocket } of state.webSockets) {
+        if (peerWebSocket !== webSocket) {
           for (const shapeKey of shapeKeys) {
             const { [shapeKey]: shapeMatcher } = subscriptions;
 

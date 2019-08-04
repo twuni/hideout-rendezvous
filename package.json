@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "regenerator-runtime": "0.13.3",
+    "sha3": "2.0.6",
     "ws": "7.1.1"
   }
 }
