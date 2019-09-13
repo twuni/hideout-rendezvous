@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  nodejs: hideoutchat/nodejs@12.6.0
+  nodejs: hideoutchat/nodejs@12.10.0
 
 workflows:
   default:
