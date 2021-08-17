@@ -1,5 +1,7 @@
-FROM twuni/nodejs:12.6.0
+FROM docker.io/library/node:16.6.1-alpine3.14
 
-RUN npm install @hideoutchat/rendezvous@0.1.0
+WORKDIR /project
 
-ENTRYPOINT ["/bin/node", "node_modules/@hideoutchat/rendezvous"]
+RUN npm install @hideoutchat/rendezvous@0.2.5
+
+CMD ["node", "node_modules/@hideoutchat/rendezvous"]

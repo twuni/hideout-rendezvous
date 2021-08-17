@@ -211,10 +211,6 @@ const server = new WebSocketServer({
 
 server.start();
 
-process.on('beforeExit', () => {
+['SIGTERM', 'SIGINT'].map((signal) => process.on(signal, () => {
   server.stop();
-});
-
-process.on('SIGTERM', () => {
-  server.stop();
-});
+}));
