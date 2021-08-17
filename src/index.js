@@ -211,6 +211,10 @@ const server = new WebSocketServer({
 
 server.start();
 
+process.on('beforeExit', () => {
+  server.stop();
+});
+
 process.on('SIGTERM', () => {
   server.stop();
 });

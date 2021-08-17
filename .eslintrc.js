@@ -8,14 +8,7 @@ module.exports = {
     'plugin:ante/recommended',
     'plugin:ante/style'
   ],
-  parser: 'babel-eslint',
-  parserOptions: {
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true
-    },
-    ecmaVersion: 6,
-    sourceType: 'module'
-  },
+  parser: '@babel/eslint-parser',
   plugins: [
     'eslint-plugin-ante'
   ]
